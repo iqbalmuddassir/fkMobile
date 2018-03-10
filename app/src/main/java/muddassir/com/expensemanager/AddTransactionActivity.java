@@ -44,16 +44,27 @@ public class AddTransactionActivity extends AppCompatActivity implements View.On
 
     private void validateAndAddTransaction() {
         List<User> users = new ArrayList<>();
-        double sum = getUsers(users);
-        double totalAmount = Double.parseDouble(transactionAmount.getText().toString());
-        if (users.size() == 0) {
+        double[] amounts = getUsers(users);
+        double totalAmount = 0;
+        try {
+            totalAmount = Double.parseDouble(transactionAmount.getText().toString());
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+        if (totalAmount <= 0) {
+            Toast.makeText(this, "Please enter total amount", Toast.LENGTH_SHORT).show();
+            return;
+        } else if (users.size() == 0) {
             Toast.makeText(this, "Please add participants", Toast.LENGTH_SHORT).show();
             return;
-        } else if (sum > totalAmount) {
-            Toast.makeText(this, "Expense paid cannot be greater than total amount", Toast.LENGTH_SHORT).show();
+        } else if (amounts[0] > totalAmount) {
+            Toast.makeText(this, "Total amount cannot be less that paid amounts", Toast.LENGTH_SHORT).show();
             return;
-        } else if (sum < totalAmount) {
-            Toast.makeText(this, "Total sum cannot be less that paid amounts", Toast.LENGTH_SHORT).show();
+        } else if (amounts[0] < totalAmount) {
+            Toast.makeText(this, "Expense paid cannot be less than total amount", Toast.LENGTH_SHORT).show();
+            return;
+        } else if (amounts[1] != amounts[0]) {
+            Toast.makeText(this, "Total paid amounts and shares should be same", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -68,14 +79,15 @@ public class AddTransactionActivity extends AppCompatActivity implements View.On
         finish();
     }
 
-    private double getUsers(List<User> users) {
-        double sum = 0;
+    private double[] getUsers(List<User> users) {
+        double[] sum = new double[]{0, 0};
         List<TypedItem> itemList = expenseAdapter.getDataList();
         for (TypedItem typedItem : itemList) {
             if (typedItem.data instanceof User) {
                 User user = (User) typedItem.data;
                 users.add(user);
-                sum += user.getPaidAmount();
+                sum[0] += user.getPaidAmount();
+                sum[1] += user.getShareAmount();
             }
         }
         return sum;

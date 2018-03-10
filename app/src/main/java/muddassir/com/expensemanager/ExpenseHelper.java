@@ -13,18 +13,24 @@ public class ExpenseHelper {
     public static final int TYPE_SUMMARY_USER = 0;
     public static final int TYPE_EXPENSE_USER = 1;
     public static final int TYPE_CONTACT_USER = 2;
-    private static List<User> users = new ArrayList<>();
-    static {
-        users.add(new User(users.size(), "Nikhil"));
-        users.add(new User(users.size(), "Neeraj"));
-        users.add(new User(users.size(), "Deepak"));
-        users.add(new User(users.size(), "Shivam"));
-        users.add(new User(users.size(), "Muddassir"));
-        users.add(new User(users.size(), "Anil"));
-    }
+    private static List<User> users;
 
     public static List<User> getDummyUsers() {
+        if (users == null) {
+            users = new ArrayList<>();
+            users.add(new User(users.size(), "Nikhil"));
+            users.add(new User(users.size(), "Neeraj"));
+            users.add(new User(users.size(), "Deepak"));
+            users.add(new User(users.size(), "Shivam"));
+            users.add(new User(users.size(), "Muddassir"));
+            users.add(new User(users.size(), "Anil"));
+        }
         return users;
+    }
+
+    public static void clear() {
+        users.clear();
+        users = null;
     }
 
     @IntDef({

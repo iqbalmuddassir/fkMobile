@@ -81,4 +81,10 @@ public class SummaryActivity extends AppCompatActivity {
             summaryList.add(new TypedItem(ExpenseHelper.TYPE_SUMMARY_USER, user));
         }
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ExpenseHelper.clear();
+    }
 }
